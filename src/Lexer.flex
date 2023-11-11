@@ -28,6 +28,9 @@ ComentarioDeDocumentacion = "/**" {ContenidoComentario} "*"+ "/"
 /* Comentario */
 Comentario = {ComentarioTradicional} | {FinDeLineaComentario} | {ComentarioDeDocumentacion}
 
+/* Variables para cadendas de texto*/
+CadenaDeTexto = \' {EntradaDeCaracter}* \'
+
 /* Identificador */
 Letra = [A-Za-zÑñ_ÁÉÍÓÚáéíóúÜü]
 Digito = [0-9]
@@ -68,6 +71,9 @@ Rule    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 /*Indentificador*/
 {Identificador} {return token(yytext(),"INDETIFICADOR", yyline, yycolumn);}
 
+/* CadenaDeTexto */
+{CadenaDeTexto} { return token(yytext(), "CADENA TEXTO", yyline, yycolumn); }
+
 /*Numero*/
 {Numero} {return token(yytext(),"NÚMERO", yyline, yycolumn);}
 
@@ -84,11 +90,16 @@ Rule    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 "=" {return token(yytext(), "Igual", yyline, yycolumn);}
 "==" {return token(yytext(), "Produccion", yyline, yycolumn);}
 /*Produccion*/
-"::==" {return token(yytext(), "Produccion", yyline, yycolumn);}
+"::=" {return token(yytext(), "Produccion", yyline, yycolumn);}
 
 /* Operadores de Agrupacion */
-"|" {return token(yytext(), "Not", yyline, yycolumn);}
+"|" {return token(yytext(), "OP_LOG_OR", yyline, yycolumn);}
 /* El punto significa cualquier caracter */
+
+/*cOMA*/
+"," {return token(yytext(), "COMA", yyline, yycolumn);}
+/*Punto y coma*/
+";" {return token(yytext(), "PUNTO_Y_COMA", yyline, yycolumn);}
 
 /* El punto significa cualquier caracter */
 /*{Numero}{Identificador} {return token(yytext(),"ID ERROR", yyline, yycolumn);}*/

@@ -1,7 +1,5 @@
-Sintaxis
 //Inicio del programa
-
-Public Class  GramaticaBNF{
+Public Class GramáticaBNF {
 //Definir Terminales y no terminales
 Rule A
 Rule B
@@ -10,10 +8,10 @@ Rule NUM;
 Conj Num = [0,1,2,3,4,5]
 //Definir Gramática 
 Gramar operaciones{
-A::= EXP ( ('+' | '-') EXP ) ;
+A::= EXP ( ('+' |  '-') EXP ) ;
 EXP::= N ( ('*' | '/') N ) ;
 A::= NUMNUM
-N::= NUM | A' ;
+N::= NUM | A ;
 }
 }//fin de la gramática
 	print(operaciones);

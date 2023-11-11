@@ -21,6 +21,8 @@ ComentarioDeDocumentacion = "/**" {ContenidoComentario} "*"+ "/"
 
 /* Comentario */
 Comentario = {ComentarioTradicional} | {FinDeLineaComentario} | {ComentarioDeDocumentacion}
+/* Variables para cadendas de texto*/
+CadenaDeTexto = \' {EntradaDeCaracter}* \'
 
 /* Identificador */
 Letra = [A-Za-zÑñ_ÁÉÍÓÚáéíóúÜü]
@@ -58,5 +60,8 @@ Fin     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 tree    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 Pila    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 Rule    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+
+/* CadenaDeTexto */
+{CadenaDeTexto} {return textColor(yychar, yylength(), new Color(255, 128, 0));}
 
 . { /* Ignorar */ }
