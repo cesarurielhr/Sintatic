@@ -348,7 +348,7 @@ public class Compilador extends javax.swing.JFrame {
         clearFields(); //Se llama al metodo clearfields
         lexicalAnalysis();
         fillTableTokens(); //Se llama al metodo filltabletokens
-       // fillTableSimbols(); //Se llama al metodo filltablesimbols
+       fillTableSimbols(); //Se llama al metodo filltablesimbols
         printConsole(); //Se llama al metodo printConsole
         codeHasBeenCompiled = true; //la variable codehasbeencompiled se coloca en false
         sum = 1; //Se vuelve a colocar la variable sum igual a 1 
@@ -484,6 +484,7 @@ public class Compilador extends javax.swing.JFrame {
 
     private void clearFields() {
         Functions.clearDataInTable(tblTokens);
+        Functions.clearDataInTable(tblTS); //se limpia la tabla de simbolos
         jtaOutputConsole.setText("");
         tokens.clear();
         errors.clear();
