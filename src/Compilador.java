@@ -36,26 +36,29 @@ public class Compilador extends javax.swing.JFrame {
     private Directory directorio;
     private ArrayList<Token> tokens;
     private ArrayList<ErrorLSSL> errors;
+    private ArrayList<ErrorTK> te;
+    
     private ArrayList<TextColor> textsColor;
     private Timer timerKeyReleased;
     private ArrayList<Production> identProd;
-    private HashMap<String, String> identificadores;
+    private HashMap<String, String> identificadores;//Definimos un hashmap que almacena nuestros identificadores
     private boolean codeHasBeenCompiled = false;
-
+    int sum = 1;//Definimos nuestra variable sum como 1 que nos servira para la tabla de simbolos
     /**
      * Creates new form Compilador
      */
+    
     public Compilador() {
         initComponents();
         init();
         jScrollPane1.setRowHeaderView(new TextLineNumber(jtpCode));
     }
-
+    
     private void init() {
-        title = "Compiler";
+        title = "Syntatic";
         setLocationRelativeTo(null);
         setTitle(title);
-        directorio = new Directory(this, jtpCode, title, ".comp");
+        directorio = new Directory(this, jtpCode, title,".comp");
         addWindowListener(new WindowAdapter() {// Cuando presiona la "X" de la esquina superior derecha
             @Override
             public void windowClosing(WindowEvent e) {
@@ -73,6 +76,7 @@ public class Compilador extends javax.swing.JFrame {
         });
         tokens = new ArrayList<>();
         errors = new ArrayList<>();
+        te = new ArrayList<>();
         textsColor = new ArrayList<>();
         identProd = new ArrayList<>();
         identificadores = new HashMap<>();
@@ -95,10 +99,15 @@ public class Compilador extends javax.swing.JFrame {
         jtpCode = new javax.swing.JTextPane();
         panelButtonCompilerExecute = new javax.swing.JPanel();
         btnCompilar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtaOutputConsole = new javax.swing.JTextArea();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblTokens = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tblTS = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
@@ -167,20 +176,31 @@ public class Compilador extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Analizador Lexico");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelButtonCompilerExecuteLayout = new javax.swing.GroupLayout(panelButtonCompilerExecute);
         panelButtonCompilerExecute.setLayout(panelButtonCompilerExecuteLayout);
         panelButtonCompilerExecuteLayout.setHorizontalGroup(
             panelButtonCompilerExecuteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelButtonCompilerExecuteLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(73, 73, 73)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCompilar)
-                .addGap(84, 84, 84))
+                .addGap(36, 36, 36))
         );
         panelButtonCompilerExecuteLayout.setVerticalGroup(
             panelButtonCompilerExecuteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelButtonCompilerExecuteLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnCompilar)
+                .addGroup(panelButtonCompilerExecuteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCompilar)
+                    .addComponent(jButton1))
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
@@ -209,22 +229,61 @@ public class Compilador extends javax.swing.JFrame {
         tblTokens.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tblTokens);
 
+        jTabbedPane1.addTab("Tabla Lexia", jScrollPane3);
+
+        tblTS.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Componete Lexico", "Lexema", "Posicion"
+            }
+        ));
+        jScrollPane4.setViewportView(tblTS);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(10, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Tabla de Simbolos", jPanel1);
+
         javax.swing.GroupLayout rootPanelLayout = new javax.swing.GroupLayout(rootPanel);
         rootPanel.setLayout(rootPanelLayout);
         rootPanelLayout.setHorizontalGroup(
             rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rootPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, rootPanelLayout.createSequentialGroup()
+                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rootPanelLayout.createSequentialGroup()
                         .addComponent(buttonsFilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelButtonCompilerExecute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
-                .addGap(17, 17, 17))
+                        .addGap(54, 54, 54)
+                        .addComponent(panelButtonCompilerExecute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTabbedPane1)))
+                .addGap(12, 12, 12))
+            .addGroup(rootPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         rootPanelLayout.setVerticalGroup(
             rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -234,13 +293,13 @@ public class Compilador extends javax.swing.JFrame {
                     .addComponent(buttonsFilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panelButtonCompilerExecute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTabbedPane1))
+                .addContainerGap())
         );
 
         getContentPane().add(rootPanel);
@@ -280,20 +339,32 @@ public class Compilador extends javax.swing.JFrame {
         } else {
             compile();
         }
+        
+        sum = 1;//Se vuelve a colocar la variable sum igual a 1
     }//GEN-LAST:event_btnCompilarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        clearFields(); //Se llama al metodo clearfields
+        lexicalAnalysis();
+        fillTableTokens(); //Se llama al metodo filltabletokens
+       // fillTableSimbols(); //Se llama al metodo filltablesimbols
+        printConsole(); //Se llama al metodo printConsole
+        codeHasBeenCompiled = true; //la variable codehasbeencompiled se coloca en false
+        sum = 1; //Se vuelve a colocar la variable sum igual a 1 
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void compile() {
         clearFields();
         lexicalAnalysis();
         fillTableTokens();
+        
         //syntacticAnalysis();
-        //semanticAnalysis();
         printConsole();
         codeHasBeenCompiled = true;
     }
 
-    ArrayList<ErrorTK> te = null;
-            
+    
     private void lexicalAnalysis() {
         // Extraer tokens
         Lexer lexer;
@@ -314,9 +385,6 @@ public class Compilador extends javax.swing.JFrame {
                 }
                 tokens.add(token);
             }
-            System.out.println("TE: " + te.toString());
-            jtaOutputConsole.setText(jtaOutputConsole.getText() + "\n" + te.toString());
-            
         } catch (FileNotFoundException ex) {
             System.out.println("El archivo no pudo ser encontrado... " + ex.getMessage());
         } catch (IOException ex) {
@@ -331,8 +399,6 @@ public class Compilador extends javax.swing.JFrame {
         gramatica.show();
     }
 
-    private void semanticAnalysis() {
-    }
 
     private void colorAnalysis() {
         /* Limpiar el arreglo de colores */
@@ -367,22 +433,51 @@ public class Compilador extends javax.swing.JFrame {
             Functions.addRowDataInTable(tblTokens, data);
         });
     }
-    
+    private void fillTableSimbols() { //creacion e inicio del metodo filltablesimbols
+        tokens.forEach(token -> { //recorremos todos los tokens
+            Object[] data = new Object[]{ //creamos un arreglo donde cada posicion sera una columna
+                token.getLexicalComp(), token.getLexeme(), sum //ajustamos nuestras columnas, 1er pos. es el componente lexico, la 2da el lexema y la 3er la linea y columna
+            };
+            if (token.getLexicalComp() == "INDENTIFICADOR") { // se crea un if donde si el componente lexico es igual a identificador se ejecuta lo siguiente
+
+                String s = data[1].toString(); //aqui obtienes el lexema de la nueva fila a introducir 
+                boolean exist = false;
+                for (int i = 0; i < tblTS.getRowCount(); i++) { //se crea un for para todas las filas de la tabla de simbolos
+                    s = tblTS.getValueAt(i, 1).toString(); //el lexema de la fila i-esima
+                    if (token.getLexeme().equals(s)) { //se crea un if donde si el lexema obtenido es igual a s
+                        exist = true; //se retorna que existe
+                        break; //se detiene el proceso
+                    }
+                }
+                if (!exist) { //se crea otro if donde es el caso contrario
+                    Functions.addRowDataInTable(tblTS, data); //ya que no existe en la tabla se agrega a esta
+                    sum++;//la variable sub aumenta en 1
+                }
+               
+            }
+        });
+    }//Fin del metodo filltablesimbols
     
 
     private void printConsole() {
         int sizeErrors = errors.size();
-        if (sizeErrors > 0) {
-            Functions.sortErrorsByLineAndColumn(errors);
+        int sizelex = te.size();
+        if (sizeErrors > 0|sizelex>0) {
+           /* Functions.sortErrorsByLineAndColumn(errors);
             String strErrors = "\n";
             for (ErrorLSSL error : errors) {
                 String strError = String.valueOf(error);
                 strErrors += strError + "\n";
-            }
+            }*/
+           String strErrors = "\n";
+               for (ErrorTK elemento : te) {
+                   String strError = String.valueOf(elemento);
+                strErrors += strError + "\n";
+            System.out.println("- " + elemento);
+        }
             jtaOutputConsole.setText("Compilación terminada...\n" + strErrors + "\nLa compilación terminó con errores...");
         } else {
-            jtaOutputConsole.setText("Compilación terminada...");
-            jtaOutputConsole.setText(jtaOutputConsole.getText()+"\n"+te.toString());
+            jtaOutputConsole.setText("Compilación terminada...\n");    
         }
         jtaOutputConsole.setCaretPosition(0);
     }
@@ -396,7 +491,7 @@ public class Compilador extends javax.swing.JFrame {
         identificadores.clear();
         codeHasBeenCompiled = false;
     }
-
+    
     /**
      * @param args the command line arguments
      */
@@ -443,13 +538,18 @@ public class Compilador extends javax.swing.JFrame {
     private javax.swing.JButton btnGuardarC;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel buttonsFilePanel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jtaOutputConsole;
     private javax.swing.JTextPane jtpCode;
     private javax.swing.JPanel panelButtonCompilerExecute;
     private javax.swing.JPanel rootPanel;
+    private javax.swing.JTable tblTS;
     private javax.swing.JTable tblTokens;
     // End of variables declaration//GEN-END:variables
 }

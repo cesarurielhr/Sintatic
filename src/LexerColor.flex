@@ -53,7 +53,7 @@ cath    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 static  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 Gramar  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 Options {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-print   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Print   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 Class   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 Conj    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 Fin     {return textColor(yychar, yylength(), new Color(0, 0, 255));}

@@ -39,9 +39,11 @@ Identificador = {Letra}({Letra}|{Digito})*
 /* Número */
 Numero = 0 | [1-9][0-9]*
 %%
-
-/* Comentarios o espacios en blanco */
+/* Ignoar Comentarios o espacios en blanco */
 {Comentario}|{EspacioEnBlanco} { /*Ignorar*/ }
+
+/*Numero*/
+("(-"{Numero}+")")|{Numero} {return token(yytext(),"NÚMERO", yyline, yycolumn);}
 
 /*Palabras Reservadas*/
 Array   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
@@ -69,13 +71,12 @@ Rule    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 
 
 /*Indentificador*/
-{Identificador} {return token(yytext(),"INDETIFICADOR", yyline, yycolumn);}
+{Identificador} {return token(yytext(),"INDENTIFICADOR", yyline, yycolumn);}
 
 /* CadenaDeTexto */
 {CadenaDeTexto} { return token(yytext(), "CADENA TEXTO", yyline, yycolumn); }
 
-/*Numero*/
-{Numero} {return token(yytext(),"NÚMERO", yyline, yycolumn);}
+
 
 /* Operadores de Agrupacion */
 "(" {return token(yytext(), "Parentesis_Apertura", yyline, yycolumn);}
@@ -101,6 +102,11 @@ Rule    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 /*Punto y coma*/
 ";" {return token(yytext(), "PUNTO_Y_COMA", yyline, yycolumn);}
 
+
+/*Errores*/
+{Numero}{Identificador} {te.add(new ErrorTK("Lexico", "Numero Invalido", yyline+1, yycolumn+1));}
+
+"'"{CadenaDeTexto} {te.add(new ErrorTK("Lexico", "Cadena Invalida", yyline+1, yycolumn+1));}
 /* El punto significa cualquier caracter */
-/*{Numero}{Identificador} {return token(yytext(),"ID ERROR", yyline, yycolumn);}*/
+
 . { te.add(new ErrorTK("Lexico", "Caracter invalido", yyline+1, yycolumn+1)); }
