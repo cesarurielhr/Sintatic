@@ -563,13 +563,18 @@ public class Compilador extends javax.swing.JFrame {
                 }
                 if (!exist) { //se crea otro if donde es el caso contrario
                        
-                       data[2]=identificadores1.get(token.getLexeme()).toString();//ya que no existe en la tabla se agrega a esta
-                       Functions.addRowDataInTable(tblTS, data);
+                       //data[2]=identificadores1.get(token.getLexeme()).toString();//ya que no existe en la tabla se agrega a esta
+                       //Functions.addRowDataInTable(tblTS, data);
                        //data[2]=identificadores1.get(token.getLexeme()).toString();
+                       
+                       for (Integer line : identificadores1.get(token.getLexeme())) {
+                    data[2] = line;
+                    Functions.addRowDataInTable(tblTS, data);
+                }
                     sum++;//la variable sub aumenta en 1
                 }else{
                 
-                         //data[2]=identificadores1.get(token.getLexeme()).toString();
+                         data[2]=identificadores1.get(token.getLexeme()).toString();
                 }
                     //Functions.addRowDataInTable(tblTS, data);
                     //data[2]=identificadores1.get(token.getLexeme()).toString();

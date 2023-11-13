@@ -38,29 +38,29 @@ Numero = 0 | [1-9][0-9]*
 {EspacioEnBlanco} { /*Ignorar*/ }
 
 /*Palabras Reservadas*/
-Array   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-List    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-If      {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Else    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-While   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-For     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Do      {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Get     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Public  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Private {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Try     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-cath    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-static  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Gramar  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Options {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Print   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Class   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Conj    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Fin     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-tree    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Pila    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-NTERM   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-TERM    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Array | array  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+List  | list   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+If    | if     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Else  | else   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+While | while  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+For   | for    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Do    | do     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Get   |get     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Public|public  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Private|private {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Try   | try     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+cath  | catch   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Static | static {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Gramar | gramar {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Options|options {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Print  | print  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Class  | class  {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Conj  | conj    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Fin   | fin     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+tree  | tree    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Pila  | pila    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+NTerm | nterm   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+Term  | term    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 
 /* CadenaDeTexto */
 {CadenaDeTexto} {return textColor(yychar, yylength(), new Color(255, 128, 0));}

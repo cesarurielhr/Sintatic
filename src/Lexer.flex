@@ -46,29 +46,29 @@ Numero = 0 | [1-9][0-9]*
 ("(-"{Numero}+")")|{Numero} {return token(yytext(),"NÚMERO", yyline, yycolumn);}
 
 /*Palabras Reservadas*/
-Array   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-List    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-If      {return token(yytext(),"PALABRA RESERVADA",yyline,yycolumn);}
-Else    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-While   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-For     {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Do      {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Get     {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Public  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Private {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Try     {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-cath    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-static  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Gramar  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Options {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Print   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Class   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Conj    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Fin     {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-tree    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Pila    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-NTERM   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-TERM   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Array | array  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+List  | list   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+If    | if     {return token(yytext(),"PALABRA RESERVADA",yyline,yycolumn);}
+Else  | else   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+While | while  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+For   | for    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Do    | do     {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Get   |get     {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Public|public  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Private|private {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Try   | try    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+cath  | catch  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Static | static {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Gramar | gramar {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Options|options {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Print  | print {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Class  | class {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Conj  | conj  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Fin   | fin  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+tree  | tree  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Pila  | pila  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+NTerm | nterm  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Term  | term {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 
 
 /*Indentificador*/

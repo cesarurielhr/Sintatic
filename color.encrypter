@@ -6,15 +6,16 @@ hola
 
 Public Class GramáticaBNF {
 //Definir Terminales y no terminales
-NTERM A;
-NTERM EXP;
-TERM NUM;
+NTerm A;
+NTerm EXP;
+NTerm N;
+Term NUM;
 //Token -  terminales
 Conj NUM = [0,1,2,3,4,5]
 //Definir Gramática 
 Gramar operaciones{
 	A::= EXP ( ('+'   |    '-' ) EXP ) ;
-	EXP::= N ( ( '*'  |  ' /'  ) N ) ;
+	EXP::= N( ( '*'  |  ' /'  ) N) ;
 	A::= [NUM NUM]
 	N::= NUM | A;
 }
