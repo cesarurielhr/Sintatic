@@ -1,0 +1,22 @@
+//Inicio programa 
+Public Class Gramaticaxd{
+
+holaxd
+NTERM EXP;
+NTERM Term;
+NTERM Factor;
+NTERM numero;
+TERM  dig;
+
+//Token - terminales
+Conj Dig = [0,1,2,3,4,5,6,7,8,9]
+//Gramatica
+Gramar xd{
+	expresion::= [termino  expresion] | termino
+	termino ::= [factor  termino] | factor
+	factor ::=  expresion  | numero 
+	numero ::= dig
+	
+	}//Gramar
+
+}//Fin Programa

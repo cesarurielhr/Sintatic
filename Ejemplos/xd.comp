@@ -1,0 +1,22 @@
+//Inicio programa 
+
+Public Class Gramaticaxd{
+
+holaxd@
+NTERM A;
+NTERM B;
+NTERM C;
+TERM VOC;
+
+//Token - terminales
+Conj VOC = [a,e,i,o,u]
+//Gramatica
+Gramar vocales{
+	A::=A | B | C;
+	A::= VOC | C
+	B::=B | VOC;
+	C::=VOC | B;
+
+	}//Gramar
+
+}//Fin Programa
