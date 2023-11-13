@@ -59,7 +59,8 @@ Conj    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 Fin     {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 tree    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 Pila    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
-Rule    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+NTERM   {return textColor(yychar, yylength(), new Color(0, 0, 255));}
+TERM    {return textColor(yychar, yylength(), new Color(0, 0, 255));}
 
 /* CadenaDeTexto */
 {CadenaDeTexto} {return textColor(yychar, yylength(), new Color(255, 128, 0));}

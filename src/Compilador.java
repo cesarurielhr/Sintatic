@@ -41,7 +41,8 @@ public class Compilador extends javax.swing.JFrame {
     private ArrayList<TextColor> textsColor;
     private Timer timerKeyReleased;
     private ArrayList<Production> identProd;
-    private HashMap<String, String> identificadores;//Definimos un hashmap que almacena nuestros identificadores
+    private HashMap<String, String> identificadores;
+     private HashMap<String, ArrayList<Integer>> identificadores1;//Definimos un hashmap que almacena nuestros identificadores
     private boolean codeHasBeenCompiled = false;
     int sum = 1;//Definimos nuestra variable sum como 1 que nos servira para la tabla de simbolos
     /**
@@ -80,6 +81,7 @@ public class Compilador extends javax.swing.JFrame {
         textsColor = new ArrayList<>();
         identProd = new ArrayList<>();
         identificadores = new HashMap<>();
+        identificadores1 = new HashMap<>();
         Functions.setAutocompleterJTextComponent(new String[]{}, jtpCode, () -> {
             timerKeyReleased.restart();
         });
@@ -239,7 +241,7 @@ public class Compilador extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "Componete Lexico", "Lexema", "Posicion"
+                "Posicion", "Lexema", "Referencias"
             }
         ));
         jScrollPane4.setViewportView(tblTS);
@@ -354,17 +356,7 @@ public class Compilador extends javax.swing.JFrame {
         sum = 1; //Se vuelve a colocar la variable sum igual a 1 
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void compile() {
-        clearFields();
-        lexicalAnalysis();
-        fillTableTokens();
-        
-        //syntacticAnalysis();
-        printConsole();
-        codeHasBeenCompiled = true;
-    }
-
-    
+  
     private void lexicalAnalysis() {
         // Extraer tokens
         Lexer lexer;
@@ -427,38 +419,6 @@ public class Compilador extends javax.swing.JFrame {
         Functions.colorTextPane(textsColor, jtpCode, new Color(40, 40, 40));
     }
 
-    private void fillTableTokens() {
-        tokens.forEach(token -> {
-            Object[] data = new Object[]{token.getLexicalComp(), token.getLexeme(), "[" + token.getLine() + ", " + token.getColumn() + "]"};
-            Functions.addRowDataInTable(tblTokens, data);
-        });
-    }
-    private void fillTableSimbols() { //creacion e inicio del metodo filltablesimbols
-        tokens.forEach(token -> { //recorremos todos los tokens
-            Object[] data = new Object[]{ //creamos un arreglo donde cada posicion sera una columna
-                token.getLexicalComp(), token.getLexeme(), sum //ajustamos nuestras columnas, 1er pos. es el componente lexico, la 2da el lexema y la 3er la linea y columna
-            };
-            if (token.getLexicalComp() == "INDENTIFICADOR") { // se crea un if donde si el componente lexico es igual a identificador se ejecuta lo siguiente
-
-                String s = data[1].toString(); //aqui obtienes el lexema de la nueva fila a introducir 
-                boolean exist = false;
-                for (int i = 0; i < tblTS.getRowCount(); i++) { //se crea un for para todas las filas de la tabla de simbolos
-                    s = tblTS.getValueAt(i, 1).toString(); //el lexema de la fila i-esima
-                    if (token.getLexeme().equals(s)) { //se crea un if donde si el lexema obtenido es igual a s
-                        exist = true; //se retorna que existe
-                        break; //se detiene el proceso
-                    }
-                }
-                if (!exist) { //se crea otro if donde es el caso contrario
-                    Functions.addRowDataInTable(tblTS, data); //ya que no existe en la tabla se agrega a esta
-                    sum++;//la variable sub aumenta en 1
-                }
-               
-            }
-        });
-    }//Fin del metodo filltablesimbols
-    
-
     private void printConsole() {
         int sizeErrors = errors.size();
         int sizelex = te.size();
@@ -490,6 +450,7 @@ public class Compilador extends javax.swing.JFrame {
         errors.clear();
         identProd.clear();
         identificadores.clear();
+        identificadores1.clear();
         codeHasBeenCompiled = false;
     }
     
@@ -553,4 +514,76 @@ public class Compilador extends javax.swing.JFrame {
     private javax.swing.JTable tblTS;
     private javax.swing.JTable tblTokens;
     // End of variables declaration//GEN-END:variables
+
+     private void compile() {
+        clearFields();
+        lexicalAnalysis();
+        fillTableTokens();
+        
+        //syntacticAnalysis();
+        printConsole();
+        codeHasBeenCompiled = true;
+    }
+    
+    
+    
+    private void fillTableTokens() {
+        tokens.forEach(token -> {
+            Object[] data = new Object[]{token.getLexicalComp(), token.getLexeme(), "[" + token.getLine() + ", " + token.getColumn() + "]"};
+            Functions.addRowDataInTable(tblTokens, data);
+        });
+    }
+    private void fillTableSimbols() { //creacion e inicio del metodo filltablesimbols
+        tokens.forEach(token -> { //recorremos todos los tokens
+            Object[] data = new Object[]{ //creamos un arreglo donde cada posicion sera una columna
+                 sum, token.getLexeme(),"" //ajustamos nuestras columnas, 1er pos. es el componente lexico, la 2da el lexema y la 3er la linea y columna
+            };
+            
+            if (token.getLexicalComp() == "INDENTIFICADOR") {// se crea un if donde si el componente lexico es igual a identificador se ejecuta lo siguiente
+                
+                if(identificadores1.get(token.getLexeme())==null){
+                    identificadores1.put(token.getLexeme(), new ArrayList<>());
+                    identificadores1.get(token.getLexeme()).add(token.getLine());
+                }else{
+                          identificadores1.get(token.getLexeme()).add(token.getLine());
+                }
+                String s = data[1].toString(); //aqui obtienes el lexema de la nueva fila a introducir 
+                boolean exist = false;
+                for (int i = 0; i < tblTS.getRowCount(); i++) { //se crea un for para todas las filas de la tabla de simbolos
+                    s = tblTS.getValueAt(i, 1).toString();//el lexema de la fila i-esima
+                    data[2]=identificadores1.get(token.getLexeme()).toString();
+                    
+                   
+                    if (token.getLexeme().equals(s)) { //se crea un if donde si el lexema obtenido es igual a s
+                        exist = true; //se retorna que existe
+                       
+                        break; //se detiene el proceso
+                    }
+                    
+                }
+                if (!exist) { //se crea otro if donde es el caso contrario
+                       
+                       data[2]=identificadores1.get(token.getLexeme()).toString();//ya que no existe en la tabla se agrega a esta
+                       Functions.addRowDataInTable(tblTS, data);
+                       //data[2]=identificadores1.get(token.getLexeme()).toString();
+                    sum++;//la variable sub aumenta en 1
+                }else{
+                
+                         //data[2]=identificadores1.get(token.getLexeme()).toString();
+                }
+                    //Functions.addRowDataInTable(tblTS, data);
+                    //data[2]=identificadores1.get(token.getLexeme()).toString();
+                    //modificarCampo(sum-2, 2, data[2]);
+            }
+            
+        });
+        System.out.print(identificadores1.toString());
+    }//Fin del metodo filltablesimbols
+    
+     public void modificarCampo(int filaSeleccionada, int columnaSeleccionada, Object nuevoValor) {
+        // Modificar el valor en el modelo de datos
+        tblTS.setValueAt(nuevoValor, filaSeleccionada, columnaSeleccionada);
+    }
+
+
 }

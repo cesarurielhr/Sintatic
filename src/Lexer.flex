@@ -67,7 +67,8 @@ Conj    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 Fin     {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 tree    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 Pila    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Rule    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+NTERM   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+TERM   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 
 
 /*Indentificador*/

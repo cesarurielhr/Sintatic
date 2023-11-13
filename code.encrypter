@@ -1,20 +1,22 @@
 //Inicio del program
+hola@
+numero
+cosa
+hola
 
 Public Class GramáticaBNF {
 //Definir Terminales y no terminales
-Rule A;
-Rule B;
-Rule NUM;
+NTERM A;
+NTERM EXP;
+TERM NUM;
 //Token -  terminales
-Conj Num = [0,1,2,3,4,5]
+Conj NUM = [0,1,2,3,4,5]
 //Definir Gramática 
 Gramar operaciones{
 	A::= EXP ( ('+'   |    '-' ) EXP ) ;
 	EXP::= N ( ( '*'  |  ' /'  ) N ) ;
-	A::= NUMNUM
+	A::= [NUM NUM]
 	N::= NUM | A;
-
-
 }
 }//fin de la gramática
 	Print(operaciones);
