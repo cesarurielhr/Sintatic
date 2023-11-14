@@ -37,7 +37,10 @@ Digito = [0-9]
 Identificador = {Letra}({Letra}|{Digito})*
 
 /* Número */
-Numero = 0 | [1-9][0-9]*
+Numero = 0 | [1-9][0-9]* | -([1-9][0-9])*
+
+/*Error Numero*/
+ErrorNumero = .Digito|Digito (.Digito.)*
 %%
 /* Ignoar Comentarios o espacios en blanco */
 {Comentario}|{EspacioEnBlanco} { /*Ignorar*/ }
@@ -105,9 +108,10 @@ Term  | term {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 
 
 /*Errores*/
-{Numero}{Identificador} {te.add(new ErrorTK("Lexico", "Numero Invalido", yyline+1, yycolumn+1));}
+{Numero}{Identificador} {te.add(new ErrorTK("Lexico", "Indentificador Invalido", yyline+1, yycolumn+1));return token(yytext(), "ERROR_ID", yyline, yycolumn);}
 
-"'"{CadenaDeTexto} {te.add(new ErrorTK("Lexico", "Cadena Invalida", yyline+1, yycolumn+1));}
+{ErrorNumero} {te.add(new ErrorTK("Lexico", "Numero Invalido", yyline+1, yycolumn+1));return token(yytext(), "ERROR_NUM", yyline, yycolumn);}
+
+
 /* El punto significa cualquier caracter */
-
-. { te.add(new ErrorTK("Lexico", "Caracter invalido", yyline+1, yycolumn+1)); }
+. { te.add(new ErrorTK("Lexico", "Caracter invalido", yyline+1, yycolumn+1));{return token(yytext(), "ERROR_CHAR", yyline, yycolumn);}}
