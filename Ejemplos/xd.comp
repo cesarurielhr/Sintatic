@@ -1,21 +1,48 @@
 //Inicio programa 
 
+//Inicio del programa
 Public Class Gramaticaxd{
 
-holaxd@
-NTERM A;
-NTERM B;
-NTERM C;
-TERM VOC;
+term digito;
+term letra;
+term entero;
+term decimal;
+term variable;
 
-//Token - terminales
-Conj VOC = [a,e,i,o,u]
+nterm expresion;
+nterm termino;
+nterm factor;
+nterm numero;
+nterm identificador;
+nterm oparit;
+nterm posneg;
+nterm funcion;
+
+conj [0,1,2,3,4,5,6,7,8,9];
+
 //Gramatica
 Gramar vocales{
-	A::=A | B | C;
-	A::= VOC | C
-	B::=B | VOC;
-	C::=VOC | B;
+	expresion ::= termino | [expresion mas termino]
+	termino ::= factor | [termino oparit factor]
+	factor ::= numero | variable | '(' expresion ')' | funcion | [posneg factor]
+
+	numero ::= entero | decimal
+	entero ::= digito
+	decimal ::= [digito digito]
+
+	variable ::= [letra identificador]
+	letra ::= 'a' | 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
+	identificador ::= letra | digito 
+	
+	oparit::='+'|'*'|'/'
+	posneg ::= '+' | '-'
+
+	funcion ::= nombre_funcion '(' lista_argumentos ')'
+	nombre_funcion ::= 'sin' | 'cos' | 'tan' | 'log' 
+
+	lista_argumentos ::= expresion | [expresion  lista_argumentos]
+
+	digito ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 
 	}//Gramar
 

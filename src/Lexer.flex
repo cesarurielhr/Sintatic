@@ -29,7 +29,7 @@ ComentarioDeDocumentacion = "/**" {ContenidoComentario} "*"+ "/"
 Comentario = {ComentarioTradicional} | {FinDeLineaComentario} | {ComentarioDeDocumentacion}
 
 /* Variables para cadendas de texto*/
-CadenaDeTexto = \' {EntradaDeCaracter}* \'
+CadenaDeTexto = {EntradaDeCaracter}{EspacioEnBlanco}*
 
 /* Identificador */
 Letra = [A-Za-zÑñ_ÁÉÍÓÚáéíóúÜü]
@@ -40,13 +40,15 @@ Identificador = {Letra}({Letra}|{Digito})*
 Numero = 0 | [1-9][0-9]* | -([1-9][0-9])*
 
 /*Error Numero*/
-ErrorNumero = .Digito|Digito (.Digito.)*
+
+NumeroReal = ({Numero}|-0)"."{Digito}+
 %%
 /* Ignoar Comentarios o espacios en blanco */
 {Comentario}|{EspacioEnBlanco} { /*Ignorar*/ }
 
 /*Numero*/
 ("(-"{Numero}+")")|{Numero} {return token(yytext(),"NÚMERO", yyline, yycolumn);}
+
 
 /*Palabras Reservadas*/
 Array | array  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
@@ -78,7 +80,7 @@ Term  | term {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 {Identificador} {return token(yytext(),"INDENTIFICADOR", yyline, yycolumn);}
 
 /* CadenaDeTexto */
-{CadenaDeTexto} { return token(yytext(), "CADENA TEXTO", yyline, yycolumn); }
+\' {CadenaDeTexto}{Identificador} \' | \'.  \' | {EspacioEnBlanco} { return token(yytext(), "CADENA TEXTO", yyline, yycolumn); }
 
 
 
@@ -96,7 +98,7 @@ Term  | term {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 "==" {return token(yytext(), "Produccion", yyline, yycolumn);}
 /*Produccion*/
 "::=" {return token(yytext(), "Produccion", yyline, yycolumn);}
-
+"..." {return token(yytext(), "Puntos_suspensivos", yyline, yycolumn);}
 /* Operadores de Agrupacion */
 "|" {return token(yytext(), "OP_LOG_OR", yyline, yycolumn);}
 /* El punto significa cualquier caracter */
@@ -110,8 +112,9 @@ Term  | term {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 /*Errores*/
 {Numero}{Identificador} {te.add(new ErrorTK("Lexico", "Indentificador Invalido", yyline+1, yycolumn+1));return token(yytext(), "ERROR_ID", yyline, yycolumn);}
 
-{ErrorNumero} {te.add(new ErrorTK("Lexico", "Numero Invalido", yyline+1, yycolumn+1));return token(yytext(), "ERROR_NUM", yyline, yycolumn);}
+{NumeroReal}+{Identificador}  {te.add(new ErrorTK("Lexico", "Numero Invalido", yyline+1, yycolumn+1)); return token(yytext(), "ERROR_NUM 2", yyline, yycolumn); }
 
+\'{CadenaDeTexto}{Identificador} | \'.  {te.add(new ErrorTK("Lexico", "Cadena Invalida", yyline+1, yycolumn+1)); return token(yytext(), "ERROR_CAD", yyline, yycolumn); }
 
 /* El punto significa cualquier caracter */
 . { te.add(new ErrorTK("Lexico", "Caracter invalido", yyline+1, yycolumn+1));{return token(yytext(), "ERROR_CHAR", yyline, yycolumn);}}

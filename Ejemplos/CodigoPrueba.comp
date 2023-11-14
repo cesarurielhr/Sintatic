@@ -1,5 +1,5 @@
 //Inicio del program
-hola@
+hola
 numero
 cosa
 hola
@@ -14,8 +14,8 @@ Term NUM;
 Conj NUM = [0,1,2,3,4,5]
 //Definir Gramática 
 Gramar operaciones{
-	A::= EXP ( ('+'   |    '-' ) EXP ) ;
-	EXP::= N( ( '*'  |  ' /'  ) N) ;
+	A::= EXP ( ( '+' | '-' ) EXP ) ;
+	EXP::= N( ( '*' | '/'  ) N) ;
 	A::= [NUM NUM]
 	N::= NUM | A;
 }
