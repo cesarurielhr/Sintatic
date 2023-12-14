@@ -103,6 +103,7 @@ public class Compilador extends javax.swing.JFrame {
         panelButtonCompilerExecute = new javax.swing.JPanel();
         btnCompilar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         Consola = new javax.swing.JTextArea();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -193,6 +194,13 @@ public class Compilador extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Analizar Sintactico");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelButtonCompilerExecuteLayout = new javax.swing.GroupLayout(panelButtonCompilerExecute);
         panelButtonCompilerExecute.setLayout(panelButtonCompilerExecuteLayout);
         panelButtonCompilerExecuteLayout.setHorizontalGroup(
@@ -200,7 +208,9 @@ public class Compilador extends javax.swing.JFrame {
             .addGroup(panelButtonCompilerExecuteLayout.createSequentialGroup()
                 .addGap(73, 73, 73)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(btnCompilar)
                 .addGap(36, 36, 36))
         );
@@ -210,7 +220,8 @@ public class Compilador extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelButtonCompilerExecuteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCompilar)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -249,7 +260,7 @@ public class Compilador extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "Posicion", "Lexema", "Referencias"
+                "Posicion", "Lexema", "Primera aparicion"
             }
         ));
         jScrollPane4.setViewportView(tblTS);
@@ -306,17 +317,14 @@ public class Compilador extends javax.swing.JFrame {
                     .addGroup(rootPanelLayout.createSequentialGroup()
                         .addComponent(buttonsFilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelButtonCompilerExecute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(panelButtonCompilerExecute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addComponent(jTabbedPane1)))
-                .addGap(12, 12, 12))
-            .addGroup(rootPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         rootPanelLayout.setVerticalGroup(
             rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -387,6 +395,17 @@ public class Compilador extends javax.swing.JFrame {
         codeHasBeenCompiled = true; //la variable codehasbeencompiled se coloca en false
         sum = 1; //Se vuelve a colocar la variable sum igual a 1 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        clearFields(); //Se llama al metodo clearfields
+        lexicalAnalysis();
+        fillTableTokens(); //Se llama al metodo filltabletokens
+        fillTableSimbols(); //Se llama al metodo filltablesimbols
+        syntacticAnalysis();
+        printConsole();
+        codeHasBeenCompiled = true; //la variable codehasbeencompiled se coloca en false
+        sum = 1; //Se vuelve a colocar la variable sum igual a 1 
+    }//GEN-LAST:event_jButton2ActionPerformed
 
   
     private void lexicalAnalysis() {
@@ -467,6 +486,7 @@ public class Compilador extends javax.swing.JFrame {
                 "ERROR SINTACTICO {}: FALTA EL 'IDENTIFICADOR' EN LA SENTENCIA [#, %]");
         
         
+        
         /*--------------------------------------------------------------------------*/
         /*gramatica Estructura Gramar*/
          gramatica.loopForFunExecUntilChangeNotDetected(() -> {  
@@ -479,6 +499,20 @@ public class Compilador extends javax.swing.JFrame {
         gramatica.loopForFunExecUntilChangeNotDetected(() -> {
         gramatica.group("ESTRUCTURA_GRAMAR", 
                 "PALABRA_RESERVADA INDENTIFICADOR Llave_Apertura (SENTENCIAS)+ Llave_Clausura",true);
+        gramatica.group("ESTRUCTURA_GRAMAR", 
+                "PALABRA_RESERVADA INDENTIFICADOR (SENTENCIAS)+ Llave_Clausura",true,9,
+                "ERROR SINTACTICO {}: FALTA EL LLAVE APERTURA '{' EN LA SENTENCIA [#, %]");
+        gramatica.group("ESTRUCTURA_GRAMAR", 
+                "PALABRA_RESERVADA INDENTIFICADOR Llave_Apertura (SENTENCIAS)+",true,9,
+                "ERROR SINTACTICO {}: FALTA EL LLAVE CERRADURA'}' EN LA SENTENCIA [#, %]");
+        gramatica.group("ESTRUCTURA_GRAMAR", 
+                "PALABRA_RESERVADA INDENTIFICADOR Llave_Apertura Llave_Apertura (SENTENCIAS)+ Llave_Clausura",true,10,
+                "ERROR SINTACTICO {}: HAY UN LLAVER DE APERTURA EXTRA '{' EN LA SENTENCIA [#, %]");
+        gramatica.group("ESTRUCTURA_GRAMAR", 
+                "PALABRA_RESERVADA INDENTIFICADOR (SENTENCIAS)+ Llave_Clausura Llave_Clausura ",true,10,
+                "ERROR SINTACTICO {}: HAY UN LLAVER DE CERRADURA EXTRA '}' EN LA SENTENCIA [#, %]");
+        
+                
          });
         /*--------------------------------------------------------------------------*/
          /*IMPRIMIR*/
@@ -615,6 +649,7 @@ public class Compilador extends javax.swing.JFrame {
     private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel buttonsFilePanel;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
