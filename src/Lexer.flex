@@ -51,36 +51,36 @@ NumeroReal = ({Numero}|-0)"."{Digito}+
 
 
 /*Palabras Reservadas*/
-Array | array  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-List  | list   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-If    | if     {return token(yytext(),"PALABRA RESERVADA",yyline,yycolumn);}
-Else  | else   {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-While | while  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-For   | for    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Do    | do     {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Get   |get     {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Public|public  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Private|private {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Try   | try    {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-cath  | catch  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Static | static {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Gramar | gramar {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Options|options {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Print  | print {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Class  | class {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Conj  | conj  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Fin   | fin  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-tree  | tree  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Pila  | pila  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-NTerm | nterm  {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
-Term  | term {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
+Array | array  {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+List  | list   {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+If    | if     {return token(yytext(),"PALABRA_RESERVADA",yyline,yycolumn);}
+Else  | else   {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+While | while  {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+For   | for    {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Do    | do     {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Get   |get     {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Public|public  {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Private|private {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Try   | try    {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+cath  | catch  {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Static | static {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Gramar | gramar {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Options|options {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Print  | print {return token(yytext(), "PRINT", yyline, yycolumn);}
+Class  | class {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Conj  | conj  {return token(yytext(), "CONJUNTO", yyline, yycolumn);}
+Fin   | fin  {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+tree  | tree  {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+Pila  | pila  {return token(yytext(), "PALABRA_RESERVADA", yyline, yycolumn);}
+NTerm | nterm  {return token(yytext(), "NOTERMINAL", yyline, yycolumn);}
+Term  | term {return token(yytext(), "TERMINAL", yyline, yycolumn);}
 
 
 /*Indentificador*/
 {Identificador} {return token(yytext(),"INDENTIFICADOR", yyline, yycolumn);}
 
 /* CadenaDeTexto */
-\' {CadenaDeTexto}{Identificador} \' | \'.  \' | {EspacioEnBlanco} { return token(yytext(), "CADENA TEXTO", yyline, yycolumn); }
+\' {CadenaDeTexto}{Identificador} \' | \'.  \' | {EspacioEnBlanco} { return token(yytext(), "CADENA_TEXTO", yyline, yycolumn); }
 
 
 

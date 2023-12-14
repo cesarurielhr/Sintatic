@@ -68,7 +68,14 @@ public class Compilador extends javax.swing.JFrame {
                 System.exit(0);
             }
         });
-        
+        Functions.setLineNumberOnJTextComponent(jtpCode);//Esta funcion permite que se muestre la linea de codigo eb nuestro JTextPane
+        timerKeyReleased = new Timer((int) (1000 * 0.5), (ActionEvent e) -> { //Se inicializa el timer para colorear el codigo
+            timerKeyReleased.stop(); //Se detiene la ejecucion del timer
+            colorAnalysis(); //Llama el metodo para analizar el color
+        });
+        Functions.insertAsteriskInName(this, jtpCode, () -> { //Coloca un asterisco en el nombre de nuestra ventana siempre que se edite codigo
+            timerKeyReleased.restart(); //el timer se reinicia
+        });
         tokens = new ArrayList<>();
         errors = new ArrayList<>();
         te = new ArrayList<>();
@@ -276,15 +283,15 @@ public class Compilador extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(128, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
         );
 
         jTabbedPane1.addTab("Sintactico", jPanel2);
@@ -376,7 +383,7 @@ public class Compilador extends javax.swing.JFrame {
         fillTableTokens(); //Se llama al metodo filltabletokens
        fillTableSimbols(); //Se llama al metodo filltablesimbols
         printConsole(); //Se llama al metodo printConsole
-         syntacticAnalysis();
+         //syntacticAnalysis();
         codeHasBeenCompiled = true; //la variable codehasbeencompiled se coloca en false
         sum = 1; //Se vuelve a colocar la variable sum igual a 1 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -413,9 +420,78 @@ public class Compilador extends javax.swing.JFrame {
        Grammar gramatica = new Grammar(tokens, errors);
         /* Mostrar gramáticas */
         /*Eliminacion de Errores*/
-        gramatica.delete(new String[]{"ERROR"},1);
+        gramatica.delete(new String[]{"ERROR","ERROR_ID","ERROR_NUM"},1);
+        /*Agrupacion de valores*/
+        gramatica.group("VALOR","(NÚMERO)",true);
+        
+        /*-----------------------------------------------------------------------*/
+        /*DECLARACION DE LOS TERMINALES*/
+        gramatica.group("TERMINALES","TERMINAL INDENTIFICADOR PUNTO_Y_COMA",true);
+        /*Errores*/
+        gramatica.group("ERRORTERMINALES","TERMINAL PUNTO_Y_COMA",true,2,
+                "ERROR SINTACTICO {}: FALTA EL 'INDENTIFICADOR' EN LA SENTENCIA [#, %]");
+        gramatica.group("ERRORTERMINALES","TERMINAL INDENTIFICADOR ",true,3,
+                "ERROR SINTACTICO {}: FALTA EL ';' EN LA SENTENCIA [#, %]");
+        /*-------------------------------------------------------------------------*/
+        /*DECLARACION DE LOS NOTERMINALES*/
+        gramatica.group("NOTERMINALES","NOTERMINAL INDENTIFICADOR PUNTO_Y_COMA",true);
+        /*ERRORES*/
+        gramatica.group("ERRORNOTERMINALES","NOTERMINAL INDENTIFICADOR PUNTO_Y_COMA",true,2,
+                "ERROR SINTACTICO {}: FALTA EL 'INDENTIFICADOR' EN LA SENTENCIA [#, %]");
+        gramatica.group("ERRORNOTERMINALES","NOTERMINAL INDENTIFICADOR ",true,3,
+                "ERROR SINTACTICO {}: FALTA ';' EN LA SENTENCIA [#, %]");
+        
+        /*-------------------------------------------------------------------------*/
+        /*iNDETIFICADORES NO DECLARADOS*/
+        //gramatica.group("NODECLARADO","INDENTIFICADOR ",true,4,"INDETIFICAROR NO DECLARADO EN LA SENTENCIA [#, %]");
+        gramatica.delete("INDENTIFICADOR PUNTO_Y_COMA",5,"INDETIFICAROR NO DECLARADO EN LA SENTENCIA [#, %]");
+        //gramatica.group("DECLARACIONVACIA","PUNTO_Y_COMA",true,6,"DECLARACIÓN VACÍA ';' EN LA SENTENCIA [#, %]");
+        /*----------------------------------------------------------------*/
+         
+        /* Eliminacion Tipos de Datos y operadores de asignacion */
+        gramatica.delete("TERMINAL", 7, 
+                "ERROR SINTACTICO {}: El TERMINAL no se encuentra en una declaración [#, %]");
+        gramatica.delete("NOTERMINAL", 7, 
+                "ERROR SINTACTICO {}: El NO TERMINAL no se encuentra en una declaración [#, %]");
+        /*--------------------------------------------------------------------------*/
+        /*CONUNTO*/
+        gramatica.group("PARAMETROS", "Corchete_Apertura (VALOR (COMA VALOR)+) Corchete_Clausura",true);
+        gramatica.group("PARAMETROS", " (VALOR (COMA VALOR)+) Corchete_Clausura",true,7,
+                "ERROR SINTACTICO {}: NO HAY CORCHETE DE APERTURA '[' EN LA SENTENCIA [#, %]");
+        gramatica.group("PARAMETROS", "Corchete_Apertura (VALOR (COMA VALOR)+)",true,7,
+                "ERROR SINTACTICO {}: NO HAY CORCHETE DE CIERRE ']' EN LA SENTENCIA [#, %]");
+        gramatica.group("CONJUNTOS", "CONJUNTO INDENTIFICADOR Igual PARAMETROS PUNTO_Y_COMA",true);
+        gramatica.group("CONJUNTOS", "CONJUNTO INDENTIFICADOR Igual PARAMETROS",true,3,
+                "ERROR SINTACTICO {}: FALTA EL ';' EN LA SENTENCIA [#, %]");
+        gramatica.group("CONJUNTOS", "CONJUNTO Igual PARAMETROS",true,2,
+                "ERROR SINTACTICO {}: FALTA EL 'IDENTIFICADOR' EN LA SENTENCIA [#, %]");
+        
+        
+        /*--------------------------------------------------------------------------*/
+        /*gramatica Estructura Gramar*/
+         gramatica.loopForFunExecUntilChangeNotDetected(() -> {  
+        gramatica.group("SENTENCIAS", 
+                "INDENTIFICADOR Produccion (INDENTIFICADOR | (INDENTIFICADOR OP_LOG_OR INDENTIFICADOR) | (Corchete_Apertura (INDENTIFICADOR)+ Corchete_Clausura)"
+                        + "|(INDENTIFICADOR Parentesis_Apertura CADENA_TEXTO Parentesis_Clausura) | (INDENTIFICADOR Parentesis_Apertura (CADENA_TEXTO OP_LOG_OR CADENA_TEXTO)* Parentesis_Clausura) "
+                        + "|(INDENTIFICADOR Parentesis_Apertura (CADENA_TEXTO OP_LOG_OR CADENA_TEXTO)+ Parentesis_Clausura INDENTIFICADOR)"
+                        + "| (INDENTIFICADOR Parentesis_Apertura Parentesis_Apertura (CADENA_TEXTO OP_LOG_OR CADENA_TEXTO)+ Parentesis_Clausura INDENTIFICADOR Parentesis_Clausura))PUNTO_Y_COMA",true);
+        });
+        gramatica.loopForFunExecUntilChangeNotDetected(() -> {
+        gramatica.group("ESTRUCTURA_GRAMAR", 
+                "PALABRA_RESERVADA INDENTIFICADOR Llave_Apertura (SENTENCIAS)+ Llave_Clausura",true);
+         });
+        /*--------------------------------------------------------------------------*/
+         /*IMPRIMIR*/
+          gramatica.group("MENSAJE_IMPRIMIR", "PRINT Parentesis_Apertura INDENTIFICADOR Parentesis_Clausura PUNTO_Y_COMA" );
+        
         gramatica.show();
         producciones.append(gramatica+"");
+        
+        /*ESTRUCTURA DEL PROGRAMA*/
+        gramatica.loopForFunExecUntilChangeNotDetected(() -> {
+          gramatica.group("ESTRUCTURA_PROGRAMA", 
+                "PALABRA_RESERVADA PALABRA_RESERVADA INDENTIFICADOR Llave_Apertura ((TERMINALES |NOTERMINALES)+ (ESTRUCTURA_GRAMAR)+)? Llave_Clausura",true);  
+         });
     }
 
    
@@ -461,26 +537,21 @@ public class Compilador extends javax.swing.JFrame {
         }
         Consola.setCaretPosition(0); //se posiciona el texto de salida
         
-        /*int sizeErrors = errors.size();
-        int sizelex = te.size();
-        if (sizeErrors > 0 | te > 0) {
+       /* int sizelex = te.size();
+        if ( sizelex > 0) {
            Functions.sortErrorsByLineAndColumn(errors);
             String strErrors = "\n";
-            for (ErrorLSSL error : errors) {
-                String strError = String.valueOf(error);
-                strErrors += strError + "\n";
-            }
-           
+            
                for (ErrorTK elemento : te) {
                    String strError = String.valueOf(elemento);
                 strErrors += strError + "\n";
             System.out.println("- " + elemento);
         }
-            jtaOutputConsole.setText("Compilación terminada...\n" + strErrors + "\nLa compilación terminó con errores...");
+            Consola.setText("Compilación terminada...\n" + strErrors + "\nLa compilación terminó con errores...");
         } else {
-            jtaOutputConsole.setText("Compilación terminada...\n");    
+            Consola.setText("Compilación terminada...\n");    
         }
-        jtaOutputConsole.setCaretPosition(0);*/
+        Consola.setCaretPosition(0);*/
     }
 
     private void clearFields() {
@@ -493,6 +564,7 @@ public class Compilador extends javax.swing.JFrame {
         identificadores.clear();
         identificadores1.clear();
         codeHasBeenCompiled = false;
+        producciones.setText("");
     }
     
     /**
@@ -578,14 +650,14 @@ public class Compilador extends javax.swing.JFrame {
             Functions.addRowDataInTable(tblTokens, data);
         });
     }
-    private void fillTableSimbols() { //creacion e inicio del metodo filltablesimbols
-        tokens.forEach(token -> { //recorremos todos los tokens
-            Object[] data = new Object[]{ //creamos un arreglo donde cada posicion sera una columna
-                 sum, token.getLexeme(),"" //ajustamos nuestras columnas, 1er pos. es el componente lexico, la 2da el lexema y la 3er la linea y columna
+    private void fillTableSimbols() {
+        tokens.forEach(token -> {
+            Object[] data = new Object[]{
+                sum, token.getLexeme(),"" //ajustamos nuestras columnas, 1er pos. es el componente lexico, la 2da el lexema y la 3er la linea y columna
             };
-            
-            if (token.getLexicalComp() == "INDENTIFICADOR") {// se crea un if donde si el componente lexico es igual a identificador se ejecuta lo siguiente
-                
+
+            if (token.getLexicalComp() == "INDENTIFICADOR") {
+
                 if(identificadores1.get(token.getLexeme())==null){
                     identificadores1.put(token.getLexeme(), new ArrayList<>());
                     identificadores1.get(token.getLexeme()).add(token.getLine());
@@ -597,39 +669,28 @@ public class Compilador extends javax.swing.JFrame {
                 for (int i = 0; i < tblTS.getRowCount(); i++) { //se crea un for para todas las filas de la tabla de simbolos
                     s = tblTS.getValueAt(i, 1).toString();//el lexema de la fila i-esima
                     data[2]=identificadores1.get(token.getLexeme()).toString();
-                    
-                   
+
                     if (token.getLexeme().equals(s)) { //se crea un if donde si el lexema obtenido es igual a s
                         exist = true; //se retorna que existe
-                       
+                        data[2] = identificadores1.get(token.getLexeme()).toString(); //se agregan todas las referencias a la columna 3
                         break; //se detiene el proceso
                     }
-                    
+
                 }
                 if (!exist) { //se crea otro if donde es el caso contrario
-                       
-                       //data[2]=identificadores1.get(token.getLexeme()).toString();//ya que no existe en la tabla se agrega a esta
-                       //Functions.addRowDataInTable(tblTS, data);
-                       //data[2]=identificadores1.get(token.getLexeme()).toString();
-                      
-                       for (Integer line : identificadores1.get(token.getLexeme())) {
-                    data[2] = line;
-                    Functions.addRowDataInTable(tblTS, data); 
-                }
+
+                    data[2] = identificadores1.get(token.getLexeme()).toString(); //se agregan todas las referencias a la columna 3
+                    Functions.addRowDataInTable(tblTS, data);
                     sum++;//la variable sub aumenta en 1
                 }
-                   // Functions.addRowDataInTable(tblTS, data);
-                    //data[2]=identificadores1.get(token.getLexeme()).toString();
-                    //modificarCampo(sum-2, 2, data[2]);
+
             }
-            
+
         });
         System.out.print(identificadores1.toString());
-    }//Fin del metodo filltablesimbols
-    
-     public void modificarCampo(int filaSeleccionada, int columnaSeleccionada, Object nuevoValor) {
-        // Modificar el valor en el modelo de datos
-        tblTS.setValueAt(nuevoValor, filaSeleccionada, columnaSeleccionada);
     }
+
+
+
 }
      
