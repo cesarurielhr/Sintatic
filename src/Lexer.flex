@@ -109,12 +109,17 @@ Term  | term {return token(yytext(), "PALABRA RESERVADA", yyline, yycolumn);}
 ";" {return token(yytext(), "PUNTO_Y_COMA", yyline, yycolumn);}
 
 
+
+
 /*Errores*/
 {Numero}{Identificador} {te.add(new ErrorTK("Lexico", "Indentificador Invalido", yyline+1, yycolumn+1));return token(yytext(), "ERROR_ID", yyline, yycolumn);}
 
-{NumeroReal}+{Identificador}  {te.add(new ErrorTK("Lexico", "Numero Invalido", yyline+1, yycolumn+1)); return token(yytext(), "ERROR_NUM 2", yyline, yycolumn); }
+{NumeroReal}+{Identificador}  {te.add(new ErrorTK("Lexico", "Numero Invalido", yyline+1, yycolumn+1)); return token(yytext(), "ERROR_NUM", yyline, yycolumn); }
 
 \'{CadenaDeTexto}{Identificador} | \'.  {te.add(new ErrorTK("Lexico", "Cadena Invalida", yyline+1, yycolumn+1)); return token(yytext(), "ERROR_CAD", yyline, yycolumn); }
 
+/*{Identificador}{0,8} {te.add(new ErrorTK("Lexico", "Overflow - Indentificador Invalido", yyline+1, yycolumn+1));return token(yytext(), "ERROR_ID", yyline, yycolumn);}*/
+
 /* El punto significa cualquier caracter */
-. { te.add(new ErrorTK("Lexico", "Caracter invalido", yyline+1, yycolumn+1));{return token(yytext(), "ERROR_CHAR", yyline, yycolumn);}}
+. { return token(yytext(), "ERROR", yyline, yycolumn); }
+/*. { te.add(new ErrorTK("Lexico", "Caracter invalido", yyline+1, yycolumn+1));{return token(yytext(), "ERROR_CHAR", yyline, yycolumn);}}*/

@@ -45,6 +45,7 @@ public class Compilador extends javax.swing.JFrame {
      private HashMap<String, ArrayList<Integer>> identificadores1;//Definimos un hashmap que almacena nuestros identificadores
     private boolean codeHasBeenCompiled = false;
     int sum = 1;//Definimos nuestra variable sum como 1 que nos servira para la tabla de simbolos
+    int sum2=2;
     /**
      * Creates new form Compilador
      */
@@ -67,14 +68,7 @@ public class Compilador extends javax.swing.JFrame {
                 System.exit(0);
             }
         });
-        Functions.setLineNumberOnJTextComponent(jtpCode);
-        timerKeyReleased = new Timer((int) (1000 * 0.3), (ActionEvent e) -> {
-            timerKeyReleased.stop();
-            colorAnalysis();
-        });
-        Functions.insertAsteriskInName(this, jtpCode, () -> {
-            timerKeyReleased.restart();
-        });
+        
         tokens = new ArrayList<>();
         errors = new ArrayList<>();
         te = new ArrayList<>();
@@ -103,13 +97,16 @@ public class Compilador extends javax.swing.JFrame {
         btnCompilar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jtaOutputConsole = new javax.swing.JTextArea();
+        Consola = new javax.swing.JTextArea();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblTokens = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblTS = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        producciones = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
@@ -210,11 +207,11 @@ public class Compilador extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jtaOutputConsole.setEditable(false);
-        jtaOutputConsole.setBackground(new java.awt.Color(255, 255, 255));
-        jtaOutputConsole.setColumns(20);
-        jtaOutputConsole.setRows(5);
-        jScrollPane2.setViewportView(jtaOutputConsole);
+        Consola.setEditable(false);
+        Consola.setBackground(new java.awt.Color(255, 255, 255));
+        Consola.setColumns(20);
+        Consola.setRows(5);
+        jScrollPane2.setViewportView(Consola);
 
         tblTokens.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -268,6 +265,29 @@ public class Compilador extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Tabla de Simbolos", jPanel1);
+
+        producciones.setColumns(20);
+        producciones.setRows(5);
+        jScrollPane5.setViewportView(producciones);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(45, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(128, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Sintactico", jPanel2);
 
         javax.swing.GroupLayout rootPanelLayout = new javax.swing.GroupLayout(rootPanel);
         rootPanel.setLayout(rootPanelLayout);
@@ -356,6 +376,7 @@ public class Compilador extends javax.swing.JFrame {
         fillTableTokens(); //Se llama al metodo filltabletokens
        fillTableSimbols(); //Se llama al metodo filltablesimbols
         printConsole(); //Se llama al metodo printConsole
+         syntacticAnalysis();
         codeHasBeenCompiled = true; //la variable codehasbeencompiled se coloca en false
         sum = 1; //Se vuelve a colocar la variable sum igual a 1 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -387,15 +408,17 @@ public class Compilador extends javax.swing.JFrame {
             System.out.println("Error al escribir en el archivo... " + ex.getMessage());
         }
     }
-
+       
     private void syntacticAnalysis() {
-        Grammar gramatica = new Grammar(tokens, errors);
-
+       Grammar gramatica = new Grammar(tokens, errors);
         /* Mostrar gramáticas */
+        /*Eliminacion de Errores*/
+        gramatica.delete(new String[]{"ERROR"},1);
         gramatica.show();
+        producciones.append(gramatica+"");
     }
 
-
+   
     private void colorAnalysis() {
         /* Limpiar el arreglo de colores */
         textsColor.clear();
@@ -424,16 +447,30 @@ public class Compilador extends javax.swing.JFrame {
     }
 
     private void printConsole() {
-        int sizeErrors = errors.size();
+         int sizeErrores = errors.size(); //se guarda en esta variable la cantidad de errores
+        if (sizeErrores > 0) { //se crea un if donde la cantidad de errores es cero se ejecuta
+            Functions.sortErrorsByLineAndColumn(errors); //se ejecuta la funcion y ordena los errores por num de linea y columna
+            String cadErrores = " \n"; //se guardan todos nuestros errores en esta variable
+            for (ErrorLSSL error : errors) { //se crea un for donde se recorren todos los errores
+                String cadError = String.valueOf(error); //convertimos el valor a cadena y lo almacenamos en la variable
+                cadErrores += cadError + "\n"; //vamos acumulando los errores
+            }
+            Consola.setText("Compilacion Conculida\nSe encontraron los siguientes errores: " + cadErrores + "\n"); //se imprime en la salida los errores y los errores encontrados
+        } else {
+            Consola.setText("Compilación Concluida"); //se imprime en la salida que se compilo todo sin errores
+        }
+        Consola.setCaretPosition(0); //se posiciona el texto de salida
+        
+        /*int sizeErrors = errors.size();
         int sizelex = te.size();
-        if (sizeErrors > 0|sizelex>0) {
-           /* Functions.sortErrorsByLineAndColumn(errors);
+        if (sizeErrors > 0 | te > 0) {
+           Functions.sortErrorsByLineAndColumn(errors);
             String strErrors = "\n";
             for (ErrorLSSL error : errors) {
                 String strError = String.valueOf(error);
                 strErrors += strError + "\n";
-            }*/
-           String strErrors = "\n";
+            }
+           
                for (ErrorTK elemento : te) {
                    String strError = String.valueOf(elemento);
                 strErrors += strError + "\n";
@@ -443,13 +480,13 @@ public class Compilador extends javax.swing.JFrame {
         } else {
             jtaOutputConsole.setText("Compilación terminada...\n");    
         }
-        jtaOutputConsole.setCaretPosition(0);
+        jtaOutputConsole.setCaretPosition(0);*/
     }
 
     private void clearFields() {
         Functions.clearDataInTable(tblTokens);
         Functions.clearDataInTable(tblTS); //se limpia la tabla de simbolos
-        jtaOutputConsole.setText("");
+        Consola.setText("");
         tokens.clear();
         errors.clear();
         identProd.clear();
@@ -498,6 +535,7 @@ public class Compilador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea Consola;
     private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnCompilar;
     private javax.swing.JButton btnGuardar;
@@ -506,14 +544,16 @@ public class Compilador extends javax.swing.JFrame {
     private javax.swing.JPanel buttonsFilePanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jtaOutputConsole;
     private javax.swing.JTextPane jtpCode;
     private javax.swing.JPanel panelButtonCompilerExecute;
+    private javax.swing.JTextArea producciones;
     private javax.swing.JPanel rootPanel;
     private javax.swing.JTable tblTS;
     private javax.swing.JTable tblTokens;
@@ -523,8 +563,8 @@ public class Compilador extends javax.swing.JFrame {
         clearFields();
         lexicalAnalysis();
         fillTableTokens();
-        
-        //syntacticAnalysis();
+        fillTableSimbols();
+        syntacticAnalysis();
         printConsole();
         codeHasBeenCompiled = true;
     }
@@ -533,7 +573,8 @@ public class Compilador extends javax.swing.JFrame {
     
     private void fillTableTokens() {
         tokens.forEach(token -> {
-            Object[] data = new Object[]{token.getLexicalComp(), token.getLexeme(), "[" + token.getLine() + ", " + token.getColumn() + "]"};
+            Object[] data = new Object[]{
+                token.getLexicalComp(), token.getLexeme(), "[" + token.getLine() + ", " + token.getColumn() + "]"};
             Functions.addRowDataInTable(tblTokens, data);
         });
     }
@@ -570,17 +611,14 @@ public class Compilador extends javax.swing.JFrame {
                        //data[2]=identificadores1.get(token.getLexeme()).toString();//ya que no existe en la tabla se agrega a esta
                        //Functions.addRowDataInTable(tblTS, data);
                        //data[2]=identificadores1.get(token.getLexeme()).toString();
-                       
+                      
                        for (Integer line : identificadores1.get(token.getLexeme())) {
                     data[2] = line;
-                    Functions.addRowDataInTable(tblTS, data);
+                    Functions.addRowDataInTable(tblTS, data); 
                 }
                     sum++;//la variable sub aumenta en 1
-                }else{
-                
-                         data[2]=identificadores1.get(token.getLexeme()).toString();
                 }
-                    //Functions.addRowDataInTable(tblTS, data);
+                   // Functions.addRowDataInTable(tblTS, data);
                     //data[2]=identificadores1.get(token.getLexeme()).toString();
                     //modificarCampo(sum-2, 2, data[2]);
             }
@@ -593,6 +631,5 @@ public class Compilador extends javax.swing.JFrame {
         // Modificar el valor en el modelo de datos
         tblTS.setValueAt(nuevoValor, filaSeleccionada, columnaSeleccionada);
     }
-
-
 }
+     

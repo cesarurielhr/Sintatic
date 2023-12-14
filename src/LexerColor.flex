@@ -22,7 +22,7 @@ ComentarioDeDocumentacion = "/**" {ContenidoComentario} "*"+ "/"
 /* Comentario */
 Comentario = {ComentarioTradicional} | {FinDeLineaComentario} | {ComentarioDeDocumentacion}
 /* Variables para cadendas de texto*/
-CadenaDeTexto = \' {EntradaDeCaracter}* \'
+CadenaDeTexto = \' {EntradaDeCaracter}*\'
 
 /* Identificador */
 Letra = [A-Za-zÑñ_ÁÉÍÓÚáéíóúÜü]

@@ -799,7 +799,7 @@ class Lexer {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { te.add(new ErrorTK("Lexico", "Caracter invalido", yyline+1, yycolumn+1));{return token(yytext(), "ERROR_CHAR", yyline, yycolumn);}
+            { return token(yytext(), "ERROR", yyline, yycolumn);
             }
             // fall through
           case 23: break;
@@ -904,7 +904,7 @@ class Lexer {
             // fall through
           case 43: break;
           case 22:
-            { te.add(new ErrorTK("Lexico", "Numero Invalido", yyline+1, yycolumn+1)); return token(yytext(), "ERROR_NUM 2", yyline, yycolumn);
+            { te.add(new ErrorTK("Lexico", "Numero Invalido", yyline+1, yycolumn+1)); return token(yytext(), "ERROR_NUM", yyline, yycolumn);
             }
             // fall through
           case 44: break;
